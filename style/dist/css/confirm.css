@@ -1,0 +1,25 @@
+/*tck*/
+.tc-dwbox{ position:absolute;z-index:9999; width:100%;}
+.tck-box{ width:515px;margin-left:30%; top:30%;_margin-top:18%;position:fixed; display:block}
+#confirm_tc,#tooltip,#ban_tc,#shutup_tc,#fwqle{_position:absolute;}
+.tck-tit{ width:515px; height:40px; background:#4F5F6F; font-size:18px; color:#FFF; font-family:"Î¢ÈíÑÅºÚ", "ºÚÌå", "ËÎÌå", "Arial Unicode MS"}
+.tck-tit span{ line-height:40px; padding-left:10px;}
+.tck-tit img{ float:right; margin-top:8px; margin-right:5px;}
+.tck-con{ text-align:center; background:#FFF; padding:20px 15px;font-size:14px; _width:485px}
+.tck-con-borstyle{ border:5px solid #4F5F6F; text-align:left; _width:475px}
+.tck-con p{  line-height:30px; margin-bottom:15px;font-size:18px;}
+.tck-con a{ color:#F00;}
+.tck-butbox{ text-align:center}
+.tck-but-style-a,.tck-but-style-b{width:100px; height:35px;border:0; margin-right:15px; color:#FFF}
+.tck-but-style-a{ background:#acbecf}
+.tck-but-style-b{ background:#e6e8ef; color: #666}
+
+.tck-ft{ margin-bottom:20px;}
+.tck-ft-wz{ padding-left:10px;}
+.tck-ft-wb{ width:50px; height:20px; margin-left:10px;margin-right:10px; background:#FFF; border:1px solid #CCC; text-align:center; line-height:20px;}
+
+
+.tck-wpxz-xl{ width:280px; height:20px;}
+.tck-wpxz-wb{ width:150px;}
+.tck-wpxz-but{ width:50px; border:0; background: #F63; height:20px; color:#FFF; cursor:pointer}
+

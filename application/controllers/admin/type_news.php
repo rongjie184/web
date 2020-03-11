@@ -1,0 +1,202 @@
+<?php
+class Type_news extends MY_Controller
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('newstypemodel');
+
+    }
+
+    /**
+     * 类型列表
+     * @return [type] [description]
+     */
+    public function type_list()
+    {
+        $this->checkauth('type_list');
+
+        $data['cdn'] = $this->cdn;
+        $name        = trim($this->input->get_post('name'));
+
+        $this->load->helper('Page');
+        // $where['del'] = 0;
+        $where = array();
+        if (isset($name) && $name) {
+            $where['name'] = $name;
+            $page_url .= '&name=' . $name;
+        }
+        $count        = $this->newstypemodel->count($where);
+        $p            = new Page($count, 20, $page_url);
+        $data['page'] = $p->show(); // 分页代码
+        $data['name'] = $name;
+        $list         = $this->newstypemodel->get_all($where, $p->firstRow, $p->listRows);
+        $data['list']       = $list;
+        $this->load->view($this->view_path, $data);
+    }
+	/**
+     * 类型详情
+     * @return [type] [description]
+     */
+
+    public function type_view()
+    {
+        $this->checkauth('type_list');
+        $id                   = $this->input->get('id');
+        $type_info         = $this->newstypemodel->get_one($id);
+        $data['type_info'] = $type_info;
+        $this->load->view($this->view_path, $data);
+    }
+
+	/**
+     * 添加类型
+     * @return [type] [description]
+     */
+
+    public function type_add()
+    {
+        $this->checkauth('type_add');
+        $data['cdn'] = $this->cdn;
+        $this->load->view($this->view_path, $data);
+    }
+
+    /**
+     * 添加类型-表单处理
+     * @return [type] [description]
+     */
+    public function type_add_do()
+    {
+        $this->checkauth('type_add');
+        $name = trim($this->input->post('name'));
+		$desc = trim($this->input->post('desc'));
+       
+        $this->load->model('newstypemodel');
+        $data = array('name' => $name,'desc' => $desc,'add_time'=>time());
+        $ret  = $this->newstypemodel->sence_check($data, 'add');
+        if (!$ret['status']) {
+            go('/index.php/admin/type_news/type_add', $ret['err_info']);
+        }
+        if (!$this->newstypemodel->add($data)) {
+            go('/index.php/admin/type_news/type_add', '添加失败，请重新添加', GO_ERROR);
+        } else {
+            go('/index.php/admin/type_news/type_list', '添加成功', GO_SUCCESS);
+        }
+    }
+
+	/**
+     * 修改分类
+     * @return [type] [description]
+     */
+    public function type_edit()
+    {
+        $this->checkauth('type_list');
+        $data['cdn']     = $this->cdn;
+        $id              = $this->input->get('id');
+        $type         = $this->newstypemodel->get_one($id);
+        $data['type'] = $type;
+        $this->load->view($this->view_path, $data);
+    }
+
+    /**
+     * 修改分类-表单处理
+     * @return [type] [description]
+     */
+    public function type_edit_do()
+    {
+        $this->checkauth('type_list');
+        $id                = $this->input->post('id');
+        $name              = trim($this->input->post('name'));
+		$desc = trim($this->input->post('desc'));
+		$status              = intval($this->input->post('status'));
+       
+        $this->load->model('newstypemodel');
+        $data = array('name' => $name,'desc' => $desc,'status'=>$status,'add_time'=>time());
+        $ret  = $this->newstypemodel->sence_check($data, 'edit');
+        if (!$ret['status']) {
+            go('/index.php/admin/type_news/type_edit?id=' . $id, $ret['err_info']);
+        }
+        if (!$this->newstypemodel->edit($data, $id)) {
+            go('/index.php/admin/type_news/type_edit?id=' . $id, '编辑失败，请重新操作', GO_ERROR);
+        } else {
+            go('/index.php/admin/type_news/type_list', '编辑成功', GO_SUCCESS);
+        }
+    }
+    public function change_status()
+    {
+
+        $this->checkauth('type_list');
+        $status = (int) $this->input->get('status');
+        $id     = (int) $this->input->get('id');
+        if (!$id) {
+            go('/index.php/admin/type_news/type_list', '未知记录');
+        }
+
+        $this->load->model('newstypemodel');
+        $info = $this->newstypemodel->get_one($id);
+        if (!$info) {
+            go('/index.php/admin/type_news/type_list', '未知渠道 error:2');
+        }
+        //验证 状态是否一致
+        if ($status != $info['status']) {
+            go('/index.php/admin/type_news/type_list', '该类型状态信息已变更，请刷新后操作');
+        }
+
+       
+        // 状态变更
+        if ($status) {
+            $status = 0;
+        } else {
+            $status = 1;
+        }
+        $ret = $this->newstypemodel->edit(array('status' => $status), $id);
+        if (!$ret) {
+            go('/index.php/admin/type_news/type_list', '操作失败，请重新操作');
+        } else {
+            go('/index.php/admin/type_news/type_list/');
+        }
+    }
+
+
+	  /**
+     * ajax 验证 资讯分类是否存在
+     * @return [type] [description]
+     */
+    public function type_name_check()
+    {
+        $this->load->model('newstypemodel');
+        $name = $this->input->post('name');
+        $data    = array('name' => $name);
+
+        // newstypemodel 验证 newstypemodel
+        $res = $this->newstypemodel->get_one($data);
+		if($res['id']){
+			$ret = array('valid' => false);
+		}else{
+			$ret = array('valid' => true);
+		
+		}
+        echo json_encode($ret);
+    }
+
+	  /**
+     * ajax 验证 资讯分类是否存在-修改
+     * @return [type] [description]
+     */
+    public function type_names_check()
+    {
+        $this->load->model('newstypemodel');
+        $name = $this->input->post('name');
+		$id = $this->input->post('id');
+        $data    = array('name' => $name);    
+        $res = $this->newstypemodel->get_one($data);
+		if($res['id']){
+			if($res['id']==$id){$ret = array('valid' => true);}else{$ret = array('valid' => false);}
+		
+		}else{
+			$ret = array('valid' => true);
+		}
+        
+        echo json_encode($ret);
+    }
+}

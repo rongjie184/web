@@ -1,0 +1,46 @@
+  <aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <ul class="sidebar-menu">
+        <li class="header">功能列表</li>
+        <!-- Optionally, you can add icons to the links -->
+        <?php
+          $action_arr = $this->login_user_action;
+          $list = $this->page_left_list;//var_dump($list);
+          foreach($list as $key=>$child){ 
+             if(in_array($child['code'],$action_arr)){
+            //var_dump($this->left_pid==$child['id']);?>
+            <li class="treeview<?=$this->left_pid==$child['id']?' active':''?>">
+              <a href="#">
+                <i class="fa <?=$child['img']?>"></i> 
+                <span><?=$child['name']?></span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <?php 
+                    if(count($child['child'])){
+                      foreach($child['child'] as $val){
+                        if(in_array($val['code'],$action_arr)){
+                        ?>
+                          <li <?=$this->left_id==$val['id']?"class='active'":''?>>
+                            <a href="/index.php/admin/<?=$val['func_c']?>/<?=$val['func_m']?>">
+                            <i class="fa fa-caret-right"></i> <?=$val['name']?></a>
+                          </li>
+                        <?php
+                      }}
+                    }
+                ?>
+              </ul>
+            </li>
+        <?php }}?>
+
+      </ul>
+      <!-- /.sidebar-menu -->
+    </section>
+    <!-- /.sidebar -->
+  </aside>

@@ -1,0 +1,32 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Url
+{
+
+	public function __construct()
+	{
+
+	}
+	public static function alias($key){
+	    $list = array(
+	        'login' => '/artanks/index.php/admin/login',
+	        'home'  => '/artanks/index.php/main',	      
+	        'crontab_list'=>'/artanks/index.php/admin/crontab/crontab_list',
+	        'crontab_add'=>'/artanks/index.php/admin/crontab/crontab_add',
+	        'crontab_edit'=>'/artanks/index.php/admin/crontab/crontab_edit',
+	        'paid_view'=>'/artanks/index.php/admin/paid/paid_view',
+	        'game_list'=>'/artanks/index.php/admin/game/game_list',
+	  
+	    );	
+	    
+	    if (!isset($list[$key])) {
+	        $key = 'home';
+	    }
+	    return $list[$key];
+	}
+
+}
+
+/* End of file Urls.php */
+/* Location: ./application/libraries/Urls.php */

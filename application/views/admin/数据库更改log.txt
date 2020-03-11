@@ -1,0 +1,14 @@
+admin_user  表 删除priv字段,增加role_id 字段;
+alter table admin_user drop column priv;
+alter table admin_user add role_id int(11);
+
+增加表 roles 
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rolename` varchar(20) DEFAULT NULL,
+  `add_time` int(11) DEFAULT NULL,
+  `priv` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `rolename` (`rolename`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
